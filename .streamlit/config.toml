@@ -1,7 +1,9 @@
 [client]
-showErrorDetails = 'none'
+toolbarMode = "minimal"
 
 [theme]
-base = 'light'
+base = "light"
 backgroundColor = "#9498ff"
 secondaryBackgroundColor = "#000000"
+primaryColor = "#ffc694"
+textColor = "white"
