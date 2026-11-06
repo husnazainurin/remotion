@@ -7,13 +7,14 @@ dashboard_page = st.Page("view/dashboard.py", title="Dashboard", icon=":material
 
 #navigation structure 
 pg = st.navigation(
-    {
-    "Home :material/home:": [home_page,logIn_page],
-    "FaQs": [faqs_page],
-    "Dashboard :material/dashboard:": [dashboard_page]
-    },
-    position= "top"
+    [
+        home_page,
+        logIn_page,
+        faqs_page,
+        dashboard_page
+    ],
+    position="top"
 )
 
-st.set_page_config(page_title="Remotion", page_icon=":guardsman:", layout="wide")
+st.set_page_config(page_title="Remotion", page_icon=":raised_hand:", layout="wide")
 pg.run()

@@ -1,7 +1,7 @@
 import streamlit as st
 from pathlib import Path
 
-st.set_page_config(page_title='Log In', layout='wide')
+st.set_page_config(page_title='Log In', layout='wide',page_icon=":raised_hand:")
 
 
 def load_css(file_name):
