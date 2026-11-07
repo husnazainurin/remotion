@@ -3,6 +3,9 @@ from pathlib import Path
 
 st.set_page_config(page_title='Log In', layout='wide',page_icon=":raised_hand:")
 
+conn = st.connection('mysql', type = 'sql')
+
+users = conn.query('SELECT * FROM users;')
 
 def load_css(file_name):
     css_path = Path(__file__).parent.parent.parent / "assets" / file_name
@@ -24,3 +27,4 @@ with col2:
     _password = st.text_input('Password', type='password')
     st.button('LOG IN', use_container_width=True)
     st.write('Don\'t have an account? Sign up instead.')
+    
