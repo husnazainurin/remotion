@@ -6,7 +6,7 @@ import streamlit as st
 # --- LOAD EXTERNAL CSS FILE ---
 def load_css(file_name):
     # Path locates assets/style.css relative to the project root
-    css_path = Path(__file__).parent.parent.parent / "assets" / file_name
+    css_path = Path(__file__).parent.parent.parent / "css" / file_name
     with open(css_path, "r") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
