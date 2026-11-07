@@ -3,6 +3,7 @@ from pathlib import Path
 
 st.set_page_config(page_title='Log In', layout='wide', page_icon=":raised_hand:")
 
+
 # Fetch database connection and users
 conn = st.connection('mysql', type='sql')
 
@@ -33,7 +34,7 @@ with col2:
         _password = st.text_input('Password', type='password')
 
         login_button = st.form_submit_button('LOG IN', use_container_width=True)
-        st.write("Don't have an account? Sign up instead.")
+    signup_button = st.button("Don't have an account? Sign up instead.")
 
 
 # Credentials check
@@ -65,3 +66,7 @@ if login_button:
         else:
             st.success('Logged in successfully.')
             st.cache_data.clear()
+
+# Redirect to sign up form
+if signup_button:
+    st.switch_page("view/signUp.py")
