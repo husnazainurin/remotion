@@ -1,5 +1,5 @@
 import streamlit as st
-from sqlalchemy import text
+from database.users import register_patient
 
 st.set_page_config(
     page_title="Sign Up", layout="wide", page_icon=":raised_hand:"
@@ -54,24 +54,10 @@ if signup_button:
         for error in errors:
             st.error(error)
     else:
-        # Register new account into database
-        with conn.session as session:
-            session.execute(
-                text(
-                    """
-                    INSERT INTO users (username, password, role_id) 
-                    VALUES (:username, :password, :role_id);
-                """
-                ),
-                {
-                    "username": cleaned_username,
-                    "password": _password1,
-                    "role_id": 2,
-                },
-            )
-            session.commit()
+        register_patient(cleaned_username, _password1)
 
         # Clear Streamlit's connection query cache so newly inserted user is fetched next time
         st.cache_data.clear()
 
+        # Print success message
         st.success("Account registered successfully.")
