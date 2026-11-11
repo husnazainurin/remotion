@@ -63,7 +63,13 @@ if login_button:
             for error in errors:
                 st.error(error)
         else:
-            st.success('Logged in successfully.')
+            # User is an admin
+            if user['role_id'] == 1:
+                st.switch_page('view/dashboard.py')
+
+            # User is a patient
+            else:
+                st.switch_page('view/profile.py')
             st.cache_data.clear()
 
 # Redirect to sign up form
