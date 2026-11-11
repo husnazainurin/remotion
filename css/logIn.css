@@ -15,6 +15,12 @@ body,
     overflow: hidden !important;
 }
 
+
+/*Hide streamlit native loading message, to replace with custom*/
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
 /* Remove margin and padding to make the columns fill the page */
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"],
