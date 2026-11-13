@@ -1,4 +1,8 @@
+[client]
+toolBarMode = "minimal"
 
+[ui]
+hideTopBar = "true"
 
 [theme]
 base = "light"
