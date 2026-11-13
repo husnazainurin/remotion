@@ -4,14 +4,14 @@
     color: rgb(0, 0, 0);
 }
 
-/* Reduce top whitespace padding */
+/* Reduce top whitespace padding
 .block-container {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
     max-width: 100% !important;
-}
+} */
 
 .title-section {
     position: relative;
