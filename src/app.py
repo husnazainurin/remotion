@@ -40,10 +40,10 @@ hand_strengthening_page = st.Page(
     title="Hand Strengthening",
     visibility="hidden",
 )
-hand_oppostion_page = st.Page(
-    "view/hand-oppostion.py:",
+hand_opposition_page = st.Page(
+    "view/hand-opposition.py",
     title="Hand Opposition",
-    visibility="hiddden", 
+    visibility="hidden", 
 )
 
 pg = st.navigation(
@@ -54,6 +54,7 @@ pg = st.navigation(
         profile_page,
         dashboard_page,
         hand_strengthening_page,
+        hand_opposition_page,
         faqs_page,
     ],
     position="top",

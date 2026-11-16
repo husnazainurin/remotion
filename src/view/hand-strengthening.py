@@ -1,6 +1,6 @@
 import streamlit as st
 st.markdown(
                 """
-                Welcome to ReMOTION! 
-                You ready to start the journey
+                Ready to set a new record?
+                
                 """)
