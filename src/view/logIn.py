@@ -2,7 +2,6 @@ import streamlit as st
 from pathlib import Path
 from database.users import get_user_by_username
 
-st.set_page_config(page_title='Log In', layout='wide', page_icon=":raised_hand:")
 
 
 def load_css(file_name):
@@ -63,6 +62,9 @@ if login_button:
             for error in errors:
                 st.error(error)
         else:
+            st.session_state["user"] =user
+            st.cache_data.clear()
+            
             # User is an admin
             if user['role_id'] == 1:
                 st.switch_page('view/dashboard.py')
@@ -70,7 +72,8 @@ if login_button:
             # User is a patient
             else:
                 st.switch_page('view/profile.py')
-            st.cache_data.clear()
+                
+            
 
 # Redirect to sign up form
 if signup_button:

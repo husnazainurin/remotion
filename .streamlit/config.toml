@@ -2,7 +2,7 @@
 toolBarMode = "minimal"
 
 [ui]
-hideTopBar = "true"
+hideTopBar = true
 
 [theme]
 base = "light"

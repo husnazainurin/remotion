@@ -21,7 +21,7 @@ def get_user_by_username(username):
 
         return dict(user) if user else None
 
-def register_patient(username, password):
+def register_patient(username, password, referral_code):
     '''Create new entry in the database from sign up form'''
 
     with get_session() as session:
@@ -29,14 +29,15 @@ def register_patient(username, password):
         session.execute(
             text(
                 """
-                INSERT INTO users (username, password, role_id) 
-                VALUES (:username, :password, :role_id);
+                INSERT INTO users (username, password, role_id, referral_code) 
+                VALUES (:username, :password, :role_id, :referral_code);
             """
             ),
             {
                 "username": username,
                 "password": password,
                 "role_id": 2,
+                "referral_code": referral_code,
             },
         )
         session.commit()
