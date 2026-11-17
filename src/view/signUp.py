@@ -1,17 +1,11 @@
 import streamlit as st
-from database.users import register_patient
+from database.users import register_patient, get_list_users
 
 st.set_page_config(
     page_title="Sign Up", layout="wide", page_icon=":raised_hand:"
 )
 
-# Connect and fetch user database
-conn = st.connection("mysql", type="sql")
-
-# Fetch existing usernames
-df_users = conn.query("SELECT username FROM users;")
-existing_users = df_users["username"].tolist()
-
+existing_users = get_list_users()
 
 st.title("Sign up")
 with st.form("sign-up"):
@@ -35,9 +29,7 @@ if signup_button:
 
     # Check for duplicate username (case-insensitive check added)
     cleaned_username = _username.strip()
-    existing_users_lower = [u.lower() for u in existing_users]
-
-    if cleaned_username.lower() in existing_users_lower:
+    if cleaned_username.casefold() in [u.casefold() for u in existing_users]:
         errors.append("This username already exists.")
 
     # Password length check

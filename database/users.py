@@ -57,3 +57,25 @@ def register_patient(username, password):
 
     finally:
         cursor.close()
+
+
+def get_list_users():
+    '''Return a list of all existing usernames'''
+    conn = init_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT username FROM dbo.users
+            """
+        )
+
+        usernames = cursor.fetchall()
+
+        return [user[0] for user in usernames]
+
+    finally:
+        cursor.close()
+
