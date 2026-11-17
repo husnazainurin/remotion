@@ -1,42 +1,59 @@
-from sqlalchemy import text
-from database.connection import get_session
+from database.connection import init_connection
 
 
 def get_user_by_username(username):
     '''Fetch account from database using username'''
+    conn = init_connection()
 
-    with get_session() as session:
+    try:
+        cursor = conn.cursor()
 
-        result = session.execute(
-            text("""
-                SELECT user_id, username,
-                       password, role_id
-                FROM users
-                WHERE username = :username
-            """),
-            {"username": username}
+        cursor.execute(
+            """
+            SELECT user_id, username, passkey, role_id
+            FROM dbo.users
+            WHERE username = ?
+            """,
+            (username,)
         )
 
-        user = result.mappings().first()
+        user = cursor.fetchone()
 
-        return dict(user) if user else None
+        if user:
+            return {
+                "user_id": user[0],
+                "username": user[1],
+                "passkey": user[2],
+                "role_id": user[3]
+            }
+
+        return None
+
+    finally:
+        cursor.close()
+
 
 def register_patient(username, password):
     '''Create new entry in the database from sign up form'''
 
-    with get_session() as session:
-        # Register new account into database
-        session.execute(
-            text(
-                """
-                INSERT INTO users (username, password, role_id) 
-                VALUES (:username, :password, :role_id);
+    conn = init_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute(
             """
-            ),
-            {
-                "username": username,
-                "password": password,
-                "role_id": 2,
-            },
+            INSERT INTO dbo.users (username, passkey, role_id)
+            VALUES (?, ?, ?)
+            """,
+            (username, password, 2)
         )
-        session.commit()
+
+        conn.commit()
+
+    except Exception:
+        conn.rollback()
+        raise
+
+    finally:
+        cursor.close()

@@ -54,7 +54,7 @@ if login_button:
 
         # Check password only if username exists
         else:
-            if _password.strip() != user['password']:
+            if _password.strip() != user['passkey']:
                 errors.append("Incorrect password.")
 
     # Show result
