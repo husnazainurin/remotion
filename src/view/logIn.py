@@ -62,7 +62,7 @@ if login_button:
             for error in errors:
                 st.error(error)
         else:
-            st.session_state["user"] =user
+            st.session_state["user"] = user
             st.cache_data.clear()
             
             # User is an admin
