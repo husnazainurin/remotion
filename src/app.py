@@ -11,7 +11,7 @@ if str(ROOT_DIR) not in sys.path:
 
 user = st.session_state.get("user")
 is_logged_in = user is not None
-is_admin = is_logged_in and user.get("role_id") == 1
+is_therapist = is_logged_in and user.get("role_id") == 1
 
 
 home_page = st.Page("view/home.py", title="Home", icon=":material/home:", default=True)
@@ -27,13 +27,13 @@ dashboard_page = st.Page(
     "view/dashboard.py",
     title="Dashboard",
     icon=":material/dashboard:",
-    visibility="visible" if is_admin else "hidden",
+    visibility="visible" if is_therapist else "hidden",
 )
 profile_page = st.Page(
     "view/profile.py",
     title="Profile",
     icon=":material/person:",
-    visibility="visible" if (is_logged_in and not is_admin) else "hidden",
+    visibility="visible" if (is_logged_in and not is_therapist) else "hidden",
 )
 hand_strengthening_page = st.Page(
     "view/hand-strengthening.py",
@@ -44,6 +44,11 @@ hand_opposition_page = st.Page(
     "view/hand-opposition.py",
     title="Hand Opposition",
     visibility="hidden", 
+)
+log_out_page = st.Page(
+    'view/log_out.py',
+    title = 'Log Out',
+    visibility= 'visible' if (is_logged_in) else 'hidden',
 )
 
 pg = st.navigation(
@@ -56,6 +61,7 @@ pg = st.navigation(
         hand_strengthening_page,
         hand_opposition_page,
         faqs_page,
+        log_out_page
     ],
     position="top",
 )

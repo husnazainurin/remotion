@@ -7,6 +7,9 @@ if "user" in st.session_state and st.session_state["user"] is not None:
     # Get user currently in the session state
     user = st.session_state["user"]
 
+    # Logout button
+    logout_button = st.button('Log Out')
+    
     # Welcoming message
     st.title(f"Hello, {user['username']}!")
     st.markdown(
