@@ -15,6 +15,7 @@ with st.form("sign-up"):
     # Prompt password and repeat to confirm
     _password1 = st.text_input("Create a password", type="password")
     _password2 = st.text_input("Repeat your password", type="password")
+    _referral_code = st.text_input("Referral code (If any?):")
 
     signup_button = st.form_submit_button("Sign Up")
 
@@ -46,10 +47,16 @@ if signup_button:
         for error in errors:
             st.error(error)
     else:
-        register_patient(cleaned_username, _password1)
+        register_patient(cleaned_username, _password1, _referral_code)
 
         # Clear Streamlit's connection query cache so newly inserted user is fetched next time
         st.cache_data.clear()
+
+    
+
+
+
+
 
         # Print success message
         st.success("Account registered successfully.")

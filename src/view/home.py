@@ -53,7 +53,7 @@ with left_col:
             """
             <div class="dev-card">
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300" alt="Aminah">
-                <div class="dev-name">AMINAH BT ABU</div>
+                <div class="dev-name">NURUL HUSNA BT ZAINURIN</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -64,7 +64,7 @@ with left_col:
             """
             <div class="dev-card">
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300" alt="Aminah">
-                <div class="dev-name">AMINAH BT ABU</div>
+                <div class="dev-name">NORHANIM FATIHAH BT AHMAD</div>
             </div>
             """,
             unsafe_allow_html=True,
