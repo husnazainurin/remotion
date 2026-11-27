@@ -18,7 +18,7 @@ if str(ROOT_DIR) not in sys.path:
 from src.model.landmarker import HandLandmarkerProcessor
 
 
-st.title("ReMOTION - Hand Tracking")
+st.title("Hand Strengthening Exercise")
 
 
 class VideoProcessor(VideoProcessorBase):

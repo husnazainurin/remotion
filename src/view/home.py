@@ -3,8 +3,9 @@ import streamlit as st
 from pathlib import Path
 import streamlit as st
 
-# --- LOAD EXTERNAL CSS FILE ---
+
 def load_css(file_name):
+    '''Load external css styling sheet'''
     # Path locates assets/style.css relative to the project root
     css_path = Path(__file__).parent.parent.parent / "css" / file_name
     with open(css_path, "r") as f:
@@ -12,7 +13,6 @@ def load_css(file_name):
 
 # Apply external styles
 load_css("home_style.css")
-
 
 
 # --- TITLE SECTION ---

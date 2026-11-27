@@ -1,4 +1,3 @@
-
 import cv2
 import mediapipe as mp
 import time
@@ -10,22 +9,18 @@ from mediapipe.tasks.python import vision
 
 class HandLandmarkerProcessor:
 
+    # Skeleton connection definitions
     HAND_CONNECTIONS = [
         # Thumb
         (0, 1), (1, 2), (2, 3), (3, 4),
-
         # Index finger
         (0, 5), (5, 6), (6, 7), (7, 8),
-
         # Middle finger
         (5, 9), (9, 10), (10, 11), (11, 12),
-
         # Ring finger
         (9, 13), (13, 14), (14, 15), (15, 16),
-
         # Little finger
         (13, 17), (17, 18), (18, 19), (19, 20),
-
         # Palm
         (0, 17)
     ]
@@ -42,7 +37,7 @@ class HandLandmarkerProcessor:
 
         model_path = str(model_path)
 
-        # MediaPipe configuration
+        # MediaPipe configuration definitions
         options = vision.HandLandmarkerOptions(
             base_options=python.BaseOptions(
                 model_asset_path=model_path
@@ -54,7 +49,7 @@ class HandLandmarkerProcessor:
             min_tracking_confidence=0.5
         )
 
-        # Initialize landmarker once
+        # Initialize landmarker 
         self.landmarker = vision.HandLandmarker.create_from_options(
             options
         )
@@ -171,5 +166,4 @@ class HandLandmarkerProcessor:
             )
 
     def close(self):
-
         self.landmarker.close()
