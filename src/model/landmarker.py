@@ -1,219 +1,175 @@
+
 import cv2
 import mediapipe as mp
 import time
 
+from pathlib import Path
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 
-# Import MediaPipe hand_landmarker.task
-MODEL_PATH = "src/model/mediapipe/hand_landmarker.task"
+class HandLandmarkerProcessor:
 
-# MediaPipe Configuration
-BaseOptions = python.BaseOptions
+    HAND_CONNECTIONS = [
+        # Thumb
+        (0, 1), (1, 2), (2, 3), (3, 4),
 
-HandLandmarker = vision.HandLandmarker
-HandLandmarkerOptions = vision.HandLandmarkerOptions
+        # Index finger
+        (0, 5), (5, 6), (6, 7), (7, 8),
 
-RunningMode = vision.RunningMode
+        # Middle finger
+        (5, 9), (9, 10), (10, 11), (11, 12),
 
+        # Ring finger
+        (9, 13), (13, 14), (14, 15), (15, 16),
 
-options = HandLandmarkerOptions(
-    base_options=BaseOptions(
-        model_asset_path=MODEL_PATH
-    ),
-    running_mode=RunningMode.VIDEO,
-    num_hands=1,
-    min_hand_detection_confidence=0.5,
-    min_hand_presence_confidence=0.5,
-    min_tracking_confidence=0.5
-)
+        # Little finger
+        (13, 17), (17, 18), (18, 19), (19, 20),
 
+        # Palm
+        (0, 17)
+    ]
 
-# Used to draw lines between landmarks so it looks like a skeleton
-HAND_CONNECTIONS = [
-    # Thumb
-    (0, 1), (1, 2), (2, 3), (3, 4),
+    def __init__(self, model_path=None):
 
-    # Index finger
-    (0, 5), (5, 6), (6, 7), (7, 8),
+        # Resolve model path
+        if model_path is None:
+            model_path = (
+                Path(__file__).resolve().parent
+                / "mediapipe"
+                / "hand_landmarker.task"
+            )
 
-    # Middle finger
-    (5, 9), (9, 10), (10, 11), (11, 12),
+        model_path = str(model_path)
 
-    # Ring finger
-    (9, 13), (13, 14), (14, 15), (15, 16),
+        # MediaPipe configuration
+        options = vision.HandLandmarkerOptions(
+            base_options=python.BaseOptions(
+                model_asset_path=model_path
+            ),
+            running_mode=vision.RunningMode.VIDEO,
+            num_hands=1,
+            min_hand_detection_confidence=0.5,
+            min_hand_presence_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
 
-    # Little finger
-    (13, 17), (17, 18), (18, 19), (19, 20),
+        # Initialize landmarker once
+        self.landmarker = vision.HandLandmarker.create_from_options(
+            options
+        )
 
-    # Palm
-    (0, 17)
-]
+        self.previous_timestamp = 0
 
+    def process_frame(self, frame):
 
-def draw_hand_landmarks(frame, landmarks):
+        """
+        Receive a BGR video frame.
+        Detect hand landmarks and draw them on the frame.
 
-    '''Draw landmarks based on the configured skeleton and MediaPipe's hand-landmarker detection'''
+        Returns:
+            annotated_frame: BGR image with skeleton
+            result: MediaPipe detection result
+        """
 
-    height, width, _ = frame.shape
+        # Mirror the frame
+        frame = cv2.flip(frame, 1)
 
-    points = []
-
-    # Convert normalized coordinates to pixel coordinates
-    for landmark in landmarks:
-
-        x = int(landmark.x * width)
-        y = int(landmark.y * height)
-
-        points.append((x, y))
-
-    # Draw connections
-    for start_idx, end_idx in HAND_CONNECTIONS:
-
-        start_point = points[start_idx]
-        end_point = points[end_idx]
-
-        cv2.line(
+        # Convert BGR to RGB
+        rgb_frame = cv2.cvtColor(
             frame,
-            start_point,
-            end_point,
-            (0, 255, 0),
+            cv2.COLOR_BGR2RGB
+        )
+
+        # Create MediaPipe image
+        mp_image = mp.Image(
+            image_format=mp.ImageFormat.SRGB,
+            data=rgb_frame
+        )
+
+        # Generate monotonically increasing timestamp
+        timestamp = int(time.monotonic() * 1000)
+
+        timestamp = max(
+            timestamp,
+            self.previous_timestamp + 1
+        )
+
+        self.previous_timestamp = timestamp
+
+        # Detect landmarks
+        result = self.landmarker.detect_for_video(
+            mp_image,
+            timestamp
+        )
+
+        # Draw detected hand
+        if result.hand_landmarks:
+
+            landmarks = result.hand_landmarks[0]
+
+            self.draw_hand_landmarks(
+                frame,
+                landmarks
+            )
+
+            display_text = "Hand Detected"
+
+        else:
+            display_text = "No Hand Detected"
+
+        # Display detection status
+        cv2.putText(
+            frame,
+            display_text,
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (255, 255, 0),
             2
         )
 
-    # Draw landmark points
-    for point in points:
+        return frame, result
 
-        cv2.circle(
-            frame,
-            point,
-            5,
-            (0, 0, 255),
-            -1
-        )
+    def draw_hand_landmarks(self, frame, landmarks):
 
+        height, width, _ = frame.shape
 
+        points = []
 
-def main():
+        # Convert normalized coordinates to pixels
+        for landmark in landmarks:
 
-    # Initialize MediaPipe Hand Landmarker
-    with HandLandmarker.create_from_options(options) as landmarker:
+            x = int(landmark.x * width)
+            y = int(landmark.y * height)
 
-        # Open webcam
-        cap = cv2.VideoCapture(0)
+            points.append((x, y))
 
-        if not cap.isOpened():
+        # Draw skeleton connections
+        for start_idx, end_idx in self.HAND_CONNECTIONS:
 
-            print("Error: Could not open webcam.")
-            return
+            start_point = points[start_idx]
+            end_point = points[end_idx]
 
-        print("Hand Landmarker started.")
-        print("Press Q to exit.")
-
-        previous_timestamp = 0
-
-        while True:
-
-            success, frame = cap.read()
-
-            if not success:
-
-                print("Failed to read webcam frame.")
-                break
-
-            # Mirror webcam image
-            frame = cv2.flip(frame, 1)
-
-            # Convert BGR to RGB
-            rgb_frame = cv2.cvtColor(
+            cv2.line(
                 frame,
-                cv2.COLOR_BGR2RGB
-            )
-
-            # Create MediaPipe image
-            mp_image = mp.Image(
-                image_format=mp.ImageFormat.SRGB,
-                data=rgb_frame
-            )
-
-            # Get timestamp in milliseconds
-            timestamp = int(time.time() * 1000)
-
-            # Ensure timestamp is monotonically increasing
-            timestamp = max(
-                timestamp,
-                previous_timestamp + 1
-            )
-
-            previous_timestamp = timestamp
-
-            # Perform hand landmark detection
-            result = landmarker.detect_for_video(
-                mp_image,
-                timestamp
-            )
-
-            # Process landmark result
-            if result.hand_landmarks:
-
-                # Get first detected hand
-                landmarks = result.hand_landmarks[0]
-
-                # Draw hand landmarks
-                draw_hand_landmarks(
-                    frame,
-                    landmarks
-                )
-
-                print("\nHand detected:")
-
-                # Print all 21 landmark coordinates
-                for index, landmark in enumerate(landmarks):
-
-                    print(
-                        f"Landmark {index}: "
-                        f"x={landmark.x:.4f}, "
-                        f"y={landmark.y:.4f}, "
-                        f"z={landmark.z:.4f}"
-                    )
-
-            else:
-
-                print("No hand detected.")
-
-
-            # Display information
-            if result.hand_landmarks:
-
-                display_text = "Hand Detected"
-            else:
-                display_text = "No Hand Detected"
-
-            cv2.putText(
-                frame,
-                display_text,
-                (20, 40),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                (255, 255, 0),
+                start_point,
+                end_point,
+                (0, 255, 0),
                 2
             )
 
-            # Show webcam
-            cv2.imshow(
-                "MediaPipe Hand Landmarker",
-                frame
+        # Draw landmark points
+        for point in points:
+
+            cv2.circle(
+                frame,
+                point,
+                5,
+                (0, 0, 255),
+                -1
             )
 
-            # Exit when Q is pressed
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
+    def close(self):
 
-        cap.release()
-        cv2.destroyAllWindows()
-
-
-# Run application
-if __name__ == "__main__":
-    main()
+        self.landmarker.close()
