@@ -1,82 +1,167 @@
 import streamlit as st
 from pathlib import Path
+
 from database.users import get_user_by_username
 
 
+# ============================================================
+# PAGE CONFIGURATION
+# ============================================================
+
+st.set_page_config(
+    page_title="Log In | ReMOTION",
+    page_icon="🤚",
+    layout="wide",
+)
+
+
+# ============================================================
+# LOAD CSS
+# ============================================================
 
 def load_css(file_name):
-    '''Load external css styling sheet'''
-    css_path = Path(__file__).parent.parent.parent / "css" / file_name
+    """Load an external CSS stylesheet."""
+
+    css_path = (
+        Path(__file__).resolve().parent.parent.parent
+        / "css"
+        / file_name
+    )
+
     if css_path.exists():
-        with open(css_path, "r") as f:
-            st.html(f"<style>{f.read()}</style>")
+        css_content = css_path.read_text(encoding="utf-8")
 
+        st.html(f"<style>{css_content}</style>")
 
-# Load CSS stylesheet
 load_css("logIn.css")
-load_css("global.css")
-
-# Define page column
-col1, col2 = st.columns(2)
-
-# Branding decoration
-with col1:
-    st.header('Your journey begins here.')
-
-# Form
-with col2:
-    with st.form('login'):
-        st.header('ReMOTION')
-
-        _username = st.text_input('Username')
-        _password = st.text_input('Password', type='password')
-
-        login_button = st.form_submit_button('LOG IN', use_container_width=True)
-    signup_button = st.button("Don't have an account? Sign up instead.")
 
 
-# Credentials check
+# ============================================================
+# LOGIN LAYOUT
+# ============================================================
+
+left_space, login_column, right_space = st.columns(
+    [1, 1.15, 1]
+)
+
+
+with login_column:
+
+    # Welcome heading
+    st.html(
+        """
+        <div class="login-heading">
+
+            <h1>
+                <span class="gradient-text">ReMOTION</span>
+            </h1>
+
+            <div class="login-eyebrow">
+                WELCOME BACK
+            </div>
+
+        </div>
+        """
+    )
+
+    # Box wrapping both the form and the sign-up section
+    with st.container(key = 'form', border=True):
+
+        # Login form
+        with st.form("login_form", border=False):
+
+            username = st.text_input(
+                "Username",
+                placeholder="Enter your username",
+            )
+
+            password = st.text_input(
+                "Password",
+                placeholder="Enter your password",
+                type="password",
+            )
+
+            login_button = st.form_submit_button(
+                "Log in",
+                use_container_width=True,
+            )
+
+
+        # Sign-up link
+        st.html(
+            """
+            <div class="signup-caption">
+                Don't have an account yet?
+            </div>
+            """
+        )
+
+        signup_button = st.button(
+            "Create an account",
+            use_container_width=True
+        )
+
+
+# ============================================================
+# LOGIN VALIDATION
+# ============================================================
+
 if login_button:
+
     errors = []
 
-    # Check for missing input fields
-    if not _username.strip() or not _password.strip():
-        errors.append("Please enter all required fields.")
+    # Check required fields
+    if not username.strip() or not password:
+        errors.append(
+            "Please enter your username and password."
+        )
 
-    # All fields are filled
     else:
 
-        # Fetch account in database
-        user = get_user_by_username(_username)
+        # Retrieve account
+        user = get_user_by_username(username.strip())
 
-        # Check if username exists
+        # Username validation
         if not user:
-            errors.append(f"No existing account found with username '{_username.strip()}'.")
+            errors.append(
+                "No account found with that username."
+            )
 
-        # Check password only if username exists
+        # Password validation
         else:
-            if _password.strip() != user['passkey']:
-                errors.append("Incorrect password.")
+            if password != user["passkey"]:
+                errors.append(
+                    "Incorrect password. Please try again."
+                )
 
-    # Show result
-    with col2:
-        if errors:
-            for error in errors:
-                st.error(error)
+    # Display errors
+    if errors:
+
+        for error in errors:
+            st.error(error)
+
+    # Successful login
+    else:
+
+        st.session_state["user"] = user
+
+        st.cache_data.clear()
+
+        # Administrator
+        if user["role_id"] == 1:
+
+            st.switch_page("view/dashboard.py")
+
+        # Patient
         else:
-            st.session_state["user"] = user
-            st.cache_data.clear()
-            
-            # User is an admin
-            if user['role_id'] == 1:
-                st.switch_page('view/dashboard.py')
 
-            # User is a patient
-            else:
-                st.switch_page('view/profile.py')
-                
-            
+            st.switch_page("view/profile.py")
 
-# Redirect to sign up form
+
+# ============================================================
+# SIGN-UP REDIRECTION
+# ============================================================
+
 if signup_button:
+
     st.switch_page("view/signUp.py")

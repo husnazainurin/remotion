@@ -164,7 +164,7 @@ st.html(
             <div class="floating-label label-bottom">
                 <span class="label-icon peach-icon">↗</span>
                 <div>
-                    <strong>Progress, visualised</strong>
+                    <strong>Quantified Progress</strong>
                     <small>Exercise monitoring</small>
                 </div>
             </div>
