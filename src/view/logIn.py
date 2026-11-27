@@ -5,14 +5,16 @@ from database.users import get_user_by_username
 
 
 def load_css(file_name):
-    '''Load styling CSS sheet for log in page'''
+    '''Load external css styling sheet'''
     css_path = Path(__file__).parent.parent.parent / "css" / file_name
     if css_path.exists():
         with open(css_path, "r") as f:
             st.html(f"<style>{f.read()}</style>")
 
+
 # Load CSS stylesheet
 load_css("logIn.css")
+load_css("global.css")
 
 # Define page column
 col1, col2 = st.columns(2)
