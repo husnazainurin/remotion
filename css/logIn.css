@@ -1,71 +1,462 @@
+
+/* ============================================================
+   REMOTION LOGIN PAGE
+   Primary:   #9498FF
+   Secondary: #FFC694
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. GLOBAL PAGE BACKGROUND
+   ------------------------------------------------------------ */
+
+:root {
+    --primary: #9498FF;
+    --primary-dark: #777CE8;
+    --primary-light: #E9EAFF;
+
+    --secondary: #FFC694;
+    --secondary-light: #FFF0E2;
+
+    --background: #171722;
+    --surface: #FFFFFF;
+
+    --text-primary: #171722;
+    --text-secondary: #686875;
+    --text-muted: #9696A4;
+
+    --border: #EAEAF0;
+}
+
+
+.stApp {
+    background: var(--background);
+
+    color: var(--text-primary);
+
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+
+/* ------------------------------------------------------------
+   2. STREAMLIT LAYOUT
+   ------------------------------------------------------------ */
+
 header[data-testid="stHeader"] {
-        background: transparent !important;
-    }
+    background: transparent !important;
+}
 
 
-/*Lock the app to viewport height and width */
+/* Keep the page scrollable if needed */
+
 html,
 body,
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"] {
-    height: 100vh !important;
-    width: 100vw !important;
-    max-height: 100vh !important;
-    min-width: 100vw !important;
-    overflow: hidden !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+
+    overflow-x: hidden !important;
 }
 
 
-/*Hide streamlit native loading message, to replace with custom*/
+/* Main content container */
+
+[data-testid="stMainBlockContainer"] {
+    max-width: 100% !important;
+
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+}
+
+
+/* Remove unnecessary horizontal gaps */
+
+[data-testid="stHorizontalBlock"] {
+    gap: 1.5rem !important;
+}
+
+
+/* Do not force every column to full viewport width */
+
+[data-testid="stColumn"] {
+    min-width: 0 !important;
+
+    height: auto !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    background: transparent !important;
+}
+
+
+/* Hide Streamlit status widget */
+
 [data-testid="stStatusWidget"] {
     display: none !important;
 }
 
-/* Remove margin and padding to make the columns fill the page */
-[data-testid="stAppViewContainer"],
-[data-testid="stMain"],
-[data-testid="stMainBlockContainer"],
-.main,
-.main .block-container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
+
+/* ------------------------------------------------------------
+   3. BRANDING
+   ------------------------------------------------------------ */
+
+.login-brand {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-bottom: 3.5rem;
 }
 
 
-/* Make left column black*/
-[data-testid="stColumn"]:nth-child(1) {
-    background-color: #111111;
-    color: #ffffff;
+.brand-symbol {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    color: #FFFFFF;
+
+    background: var(--primary-dark);
+
+    border-radius: 13px;
+
+    font-size: 1.2rem;
+    font-weight: 900;
+
+    box-shadow:
+        0 8px 20px rgba(119, 124, 232, 0.25);
 }
 
-/* Make columns fill the entire viewport */
-[data-testid="stColumn"] {
-    height: 100vh !important;
-    width: 100vw !important;
-    padding: 3rem !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
+
+.brand-name {
+    color: var(--text-primary);
+
+    font-size: 1.5rem;
+    font-weight: 850;
+
+    letter-spacing: -1px;
 }
 
 
-/*Ensure columns stretch across the full width*/
-[data-testid="stHorizontalBlock"] {
-    width: 100% !important;
-    gap: 0 !important;
-    margin: 0 !important;
+.brand-name span {
+    background:
+        linear-gradient(
+            110deg,
+            #777CE8 5%,
+            #9498FF 45%,
+            #EBAF7E 100%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
 }
 
-/*  Sign Up Button styling */
-[data-testid="stButton"]>button {
-    background-color: #ffc694;
-    color: #000000;
-    border: none;
+
+/* ------------------------------------------------------------
+   4. LOGIN HEADING
+   ------------------------------------------------------------ */
+
+.login-heading {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+
+.login-eyebrow {
+    display: inline-block;
+
+    color: var(--primary-dark);
+
+    font-size: 0.7rem;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 0;
+}
+
+
+.login-heading h1 {
+    color: var(--text-primary);
+
+    font-size: clamp(2.2rem, 4vw, 3rem);
+
+    font-weight: 850;
+
+    line-height: 1.12;
+
+    letter-spacing: -2px;
+
+    margin: 0 0 1.2rem;
+}
+
+
+/* Gradient text */
+
+.gradient-text {
+    background:
+        linear-gradient(
+            110deg,
+            #777CE8 5%,
+            #9498FF 45%,
+            #EBAF7E 100%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+}
+
+
+.login-heading p {
+    max-width: 340px;
+
+    margin: 0 auto;
+
+    color: var(--text-secondary);
+
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+
+/* ------------------------------------------------------------
+   5. LOGIN FORM CARD
+   ------------------------------------------------------------ */
+
+[data-testid="stForm"] {
+    background: transparent;
+
+    backdrop-filter: blur(15px);
+}
+
+
+/* ------------------------------------------------------------
+   6. INPUT LABELS
+   ------------------------------------------------------------ */
+
+[data-testid="stForm"] label {
+    color: var(--text-primary) !important;
+
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+}
+
+
+/* ------------------------------------------------------------
+   7. TEXT INPUTS
+   ------------------------------------------------------------ */
+
+[data-testid="stTextInput"] input {
+    min-height: 48px;
+
+    color: var(--text-primary) !important;
+
+    background: #FAFAFC !important;
+
+    border: 1px solid #E6E6EF !important;
+
+    border-radius: 12px !important;
+
+    font-size: 0.85rem !important;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Placeholder */
+
+[data-testid="stTextInput"] input::placeholder {
+    color: #A5A5B2 !important;
+}
+
+
+/* Focus state */
+
+[data-testid="stTextInput"] input:focus {
+    background: #FFFFFF !important;
+
+    border-color: var(--primary) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(148, 152, 255, 0.15) !important;
+}
+
+
+/* ------------------------------------------------------------
+   8. LOGIN BUTTON
+   ------------------------------------------------------------ */
+
+[data-testid="stFormSubmitButton"] button {
+    min-height: 50px;
+
+    color: #000000 !important;
+
+    background:var(--secondary);
+
+    border: none !important;
+
+    border-radius: 12px !important;
+
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+
+    letter-spacing: 0.5px;
+
+    margin-top: 0.8rem;
+
+    box-shadow:
+        0 8px 20px rgba(119, 124, 232, 0.2);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+[data-testid="stFormSubmitButton"] button:hover {
+    transform: translateY(-2px);
+
+    background: var(--secondary-light);
+
+    box-shadow:
+        0 12px 25px rgba(119, 124, 232, 0.3);
+}
+
+
+/* ------------------------------------------------------------
+   9. SIGN-UP SECTION
+   ------------------------------------------------------------ */
+
+.signup-caption {
+    color: var(--text-muted);
+
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom:0 !important;
+    font-size: 0.8rem;
+}
+
+
+/* Sign-up button */
+
+[data-testid="stButton"] button {
+    min-height: 45px;
+    color: var(--primary-dark) !important;
+    text-decoration: underline;
+
+    background: transparent !important;
+
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+
+    margin-top: 0;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+[data-testid="stButton"] button:hover {
+    color: var(--text-primary) !important;
+    transform: translateY(-1px);
+}
+
+
+.st-key-form {
+    background-color: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 20px !important;
+    padding: 2rem !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+}
+
+[data-testid="stForm"] {
+    background: transparent !important;
+    padding: 0 !important;
+    align-items: center;
+}
+
+
+/* ------------------------------------------------------------
+   10. ERROR MESSAGES
+   ------------------------------------------------------------ */
+
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
+
+    font-size: 0.8rem !important;
+}
+
+
+/* ------------------------------------------------------------
+   11. RESPONSIVE DESIGN
+   ------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+
+    [data-testid="stMainBlockContainer"] {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+
+    .login-brand {
+        margin-bottom: 2.5rem;
+    }
+
+
+    .login-heading h1 {
+        font-size: 2.4rem;
+
+        letter-spacing: -1.5px;
+    }
+
+
+    [data-testid="stForm"] {
+        padding: 1.5rem !important;
+
+        border-radius: 20px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .login-heading h1 {
+        font-size: 2.1rem;
+    }
+
+
+    .login-heading p {
+        font-size: 0.82rem;
+    }
+
+
+    [data-testid="stForm"] {
+        padding: 1.2rem !important;
+    }
+
 }
